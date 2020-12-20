@@ -17,10 +17,11 @@ typedef struct _addressBook {
 	Long length;
 }AddressBook;
 
-int main(int argc, char* argv[]);
+Long Load(AddressBook* addressBook);
 Long Record(AddressBook* addressBook, const char(*name), const char(*address), const char(*phoneNumber), const char(*emailAddress));
 void Find(AddressBook* addressBook, const char(*name), Long(*indexes), Long* count);
 Long Correct(AddressBook* addressBook, Long index, const char(*address), const char(*phoneNumber), const char(*emailAddress));
 Long Erase(AddressBook* addressBook, Long index);
 void Arrange(AddressBook* addressBook);
+Long Save(AddressBook* addressBook);
 #endif // !_ADDRESSBOOK_H
