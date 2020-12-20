@@ -4,41 +4,42 @@
 #include <string.h>
 #pragma warning(disable:4996)
 
+
 int main(int argc, char* arv[]) {
 	Long index;
 	Long indexes[MAX];
 	Long count;
-	Long i = 0;
+	Long i=0;
 	AddressBook addressBook = { {{"","","",""}, {"","","",""}, {"","","",""}, {"","","",""}, {"","","",""}, {"","","",""}}, MAX, 0 };
 
-
+	count = Load(&addressBook);
 	printf("-------Record--------\n");
-	index = Record(&addressBook, "ÃÖ±æµ¿", "°æ±âµµ", "031", "naver");
+	index = Record(&addressBook, "ìµœê¸¸ë™", "ê²½ê¸°ë„", "031", "naver");
 	printf("%d\t %s\t %s\t %s\t %s\n", index + 1, addressBook.personals[index].name, addressBook.personals[index].address, addressBook.personals[index].phoneNumber, addressBook.personals[index].emailAddress);
-	index = Record(&addressBook, "À±±æµ¿", "´ëÀü½Ã", "051", "daum");
+	index = Record(&addressBook, "ìœ¤ê¸¸ë™", "ëŒ€ì „ì‹œ", "051", "daum");
 	printf("%d\t %s\t %s\t %s\t %s\n", index + 1, addressBook.personals[index].name, addressBook.personals[index].address, addressBook.personals[index].phoneNumber, addressBook.personals[index].emailAddress);
-	index = Record(&addressBook, "°í±æµ¿", "´ë±¸½Ã", "052", "gmail");
+	index = Record(&addressBook, "ê³ ê¸¸ë™", "ëŒ€êµ¬ì‹œ", "052", "gmail");
 	printf("%d\t %s\t %s\t %s\t %s\n", index + 1, addressBook.personals[index].name, addressBook.personals[index].address, addressBook.personals[index].phoneNumber, addressBook.personals[index].emailAddress);
-	index = Record(&addressBook, "Á¤±æµ¿", "Á¦ÁÖ½Ã", "012", "yahoo");
+	index = Record(&addressBook, "ì •ê¸¸ë™", "ì œì£¼ì‹œ", "012", "yahoo");
 	printf("%d\t %s\t %s\t %s\t %s\n", index + 1, addressBook.personals[index].name, addressBook.personals[index].address, addressBook.personals[index].phoneNumber, addressBook.personals[index].emailAddress);
-	index = Record(&addressBook, "À±±æµ¿", "°í¾ç½Ã", "032", "empass");
+	index = Record(&addressBook, "ìœ¤ê¸¸ë™", "ê³ ì–‘ì‹œ", "032", "empass");
 	printf("%d\t %s\t %s\t %s\t %s\n", index + 1, addressBook.personals[index].name, addressBook.personals[index].address, addressBook.personals[index].phoneNumber, addressBook.personals[index].emailAddress);
 
-	Find(&addressBook, "À±±æµ¿", indexes, &count);
+	Find(&addressBook, "ìœ¤ê¸¸ë™", indexes, &count);
 	printf("-------Find--------\n");
 	while (i < count) {
 		printf("%d\t %s\t %s\t %s\t %s\n", indexes[i] + 1, addressBook.personals[indexes[i]].name, addressBook.personals[indexes[i]].address, addressBook.personals[indexes[i]].phoneNumber, addressBook.personals[indexes[i]].emailAddress);
 		i++;
 	}
 
-	index = Correct(&addressBook, 1, "¿ï»ê½Ã", "123", "daum");
+	index = Correct(&addressBook, 1, "ìš¸ì‚°ì‹œ", "123", "daum");
 	printf("-------Correct--------\n");
 	printf("%d\t %s\t %s\t %s\t %s\n", index + 1, addressBook.personals[index].name, addressBook.personals[index].address, addressBook.personals[index].phoneNumber, addressBook.personals[index].emailAddress);
 
 	index = Erase(&addressBook, 4);
 	printf("-------Erase--------\n");
 	if (index == -1) {
-		printf("Áö¿öÁ³½À´Ï´Ù\n");
+		printf("ì§€ì›Œì¡ŒìŠµë‹ˆë‹¤\n");
 	}
 
 	Arrange(&addressBook);
@@ -51,8 +52,27 @@ int main(int argc, char* arv[]) {
 		i++;
 	}
 
+	Save(&addressBook);
 
 	return 0;
+}
+
+
+Long Load(AddressBook* addressBook) {
+	Personal personal;
+	Long i = 0;
+	FILE* file = fopen("Personals.dat", "rb");
+	if (file != NULL) {
+		fread(&personal, sizeof(Personal), 1, file);
+		while (!feof(file)) {
+			addressBook->personals[i] = personal;
+			i++;
+			(addressBook->length)++;
+			fread(&personal, sizeof(Personal), 1, file);
+		}
+		fclose(file);
+	}
+	return addressBook->length;
 }
 
 Long Record(AddressBook* addressBook, const char(*name), const char(*address), const char(*phoneNumber), const char(*emailAddress)) {
@@ -132,4 +152,17 @@ void Arrange(AddressBook* addressBook) {
 		addressBook->personals[j + 1] = temp;
 		k++;
 	}
+}
+
+Long Save(AddressBook* addressBook) {
+	Long i = 0;
+	FILE* file = fopen("Personals.dat", "wb");
+	if (file != NULL) {
+		while (i < addressBook->length) {
+			fwrite(addressBook->personals + i, sizeof(Personal), 1, file);
+			i++;
+		}
+		fclose(file);
+	}
+	return addressBook->length;
 }
