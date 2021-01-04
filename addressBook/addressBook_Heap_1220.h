@@ -21,5 +21,7 @@ Long Correct(AddressBook* addressBook, Long index, const char(*address), const c
 Long Erase(AddressBook* addressBook, Long index);
 void Arrange(AddressBook* addressBook);
 void Destroy(AddressBook* addressBook);
+Long Load(AddressBook* addressBook);
+Long Save(AddressBook* addressBook);
 #endif // !_ADDRESSBOOK_HEAP
 
