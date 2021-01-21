@@ -28,5 +28,22 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
 
 ```
 3. Array Library 설계 프로젝트
+
+3.1. CREATE
+
+3.2. UPDATE
+  -Insert(front/rear)
+  -Delete(front/rear)
+  -Clear
+  -Modify
   
+3.3. QUERY
+  -LinearSearch(unique/duplicate)
+  -BinarySearch(unique/duplicate)
+  -SelectionSort
+  -BubbleSort
+  -InsertionSort
+  -MergeSort
+  
+3.4. DESTROY
 ```
