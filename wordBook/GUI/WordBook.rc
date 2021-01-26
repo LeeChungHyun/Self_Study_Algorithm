@@ -1,0 +1,170 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// 한국어(대한민국) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_KOR)
+LANGUAGE LANG_KOREAN, SUBLANG_DEFAULT
+#pragma code_page(949)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_WORDBOOKFORM DIALOGEX 0, 0, 632, 277
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "단어장"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_EDIT_SPELLING,65,30,263,16,ES_AUTOHSCROLL
+    COMBOBOX        IDC_COMBO_WORDCLASS,65,50,264,178,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT_MEANING,66,67,262,16,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_EXAMPLE,66,92,263,16,ES_AUTOHSCROLL
+    PUSHBUTTON      "기재하기",IDC_BUTTON_RECORD,520,15,75,18
+    PUSHBUTTON      "찾    기",IDC_BUTTON_FIND,521,36,75,18
+    PUSHBUTTON      "고 치 기",IDC_BUTTON_CORRECT,521,58,75,18
+    PUSHBUTTON      "지 우 기",IDC_BUTTON_ERASE,521,80,75,18
+    PUSHBUTTON      "정리하기",IDC_BUTTON_ARRANGE,521,101,75,18
+    LTEXT           "철자들",IDC_STATIC_SPELLING,31,33,23,11
+    GROUPBOX        "단어",IDC_STATIC_WORD,14,14,383,110
+    LTEXT           "예  시",IDC_STATIC_EXAMPLE,31,96,23,11
+    LTEXT           "품  사",IDC_STATIC_WORDCLASS,31,52,23,11
+    LTEXT           "의  미",IDC_STATIC_MEANING,31,73,23,11
+    CONTROL         "",IDC_LIST_WORDS,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,15,133,469,127
+END
+
+IDD_FINDINGFORM DIALOGEX 0, 0, 512, 230
+STYLE DS_SETFONT | DS_3DLOOK | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "찾기"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "철자들",IDC_RADIO_FINDSPELLING,"Button",BS_AUTORADIOBUTTON,29,33,36,12
+    EDITTEXT        IDC_EDIT_FINDSPELLING,65,34,264,12,ES_AUTOHSCROLL
+    CONTROL         "의  미",IDC_RADIO_FINDMEANING,"Button",BS_AUTORADIOBUTTON,29,48,32,12
+    EDITTEXT        IDC_EDIT_FINDMEANING,65,48,264,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "찾    기",IDC_BUTTON_FIND,407,34,75,18
+    CONTROL         "",IDC_LIST_WORDS,"SysListView32",LVS_REPORT | LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,15,84,469,127
+    GROUPBOX        "조건",IDC_STATIC_CONDITION,14,14,341,59
+END
+
+IDD_MEMORYFORM DIALOGEX 0, 0, 562, 279
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
+CAPTION "외우기"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_LIST_ANSWERSHEETS,"SysListView32",LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,424,32,99,184
+    GROUPBOX        "문제",IDC_STATIC_TEST,23,19,306,195
+    GROUPBOX        "답안지",IDC_STATIC_ANSWERSHEET,417,22,110,199
+    CONTROL         "",IDC_LIST_TESTS2,"SysListView32",LVS_ALIGNLEFT | WS_BORDER | WS_TABSTOP,37,41,214,171
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_WORDBOOKFORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 625
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 270
+    END
+
+    IDD_FINDINGFORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 505
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 223
+    END
+
+    IDD_MEMORYFORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 555
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 272
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_WORDBOOKFORM AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_FINDINGFORM AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+IDD_MEMORYFORM AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+#endif    // 한국어(대한민국) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
