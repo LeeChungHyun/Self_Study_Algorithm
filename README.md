@@ -48,3 +48,10 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
   
 3.4. DESTROY
 ```
+
+```
+4. BusinessCardHolder 프로젝트
+
+  4.1 LinkedList 기반 명함 관리 프로그램(MFC포함)
+  
+```
