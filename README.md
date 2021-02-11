@@ -52,6 +52,14 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
 ```
 4. BusinessCardHolder 프로젝트
 
-  4.1 LinkedList 기반 명함 관리 프로그램(MFC포함)
+  4.1. LinkedList 기반 명함 관리 프로그램(MFC포함)
+    4.1.1. 주요 기능
+        -꽂기(PutIn)
+        -들어내기(PutOut)
+        -찾기(Find)
+        -정리하기(Arrange)
+        -First, Next, Previous, Last
+        
+  4.2. File Processing(Load/Save)기능 추가
   
 ```
