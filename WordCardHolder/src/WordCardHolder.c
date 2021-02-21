@@ -1,377 +1,254 @@
+#include "WordCardHolderForm.h"
+#include "PuttingInForm.h"
+#include "FindingForm.h"
+#include "PuttingOutForm.h"
+#include "MemorizingForm.h"
+#include "KeepingForm.h"
+#include "TestingForm.h"
 #include "WordCardHolderh.h"
-#include <stdio.h>
-#include <string.h>
+#include "resource.h"
 #include <stdlib.h>
-#pragma warning(disable:4996)
+#include <commctrl.h>
 
-#if 0
-int main(int argc, char* argv[]) {
-	WordCardHolder wordCardHolder;
-	WordCard wordCard1 = { {"apple", "����", "���","apple is a fruit"}, NULL };
-	WordCard wordCard2 = { {"pretty", "����", "�̻ڴ�","she is pretty"}, NULL };
-	WordCard wordCard3 = { {"pretty", "�λ�", "��","it is pretty cheap"}, NULL };
-	WordCard wordCard4 = { {"beautiful", "����", "�̻ڴ�","she is beautiful"},  NULL };
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow) {
+	int response = DialogBox(hInstance, MAKEINTRESOURCE(IDD_WORDCARDHOLDERFORM), NULL, WordCardHolderFormProc);
+	return response;
+}
 
-	WordCard wordCard;
-	WordCard* index;
-	WordCard* (*indexes);
-	WordCard* temp = NULL;
+BOOL CALLBACK WordCardHolderFormProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	BOOL ret;
+
+	switch (message) {
+	case WM_INITDIALOG: ret = WordCardHolderForm_OnInitDialog(hWnd, wParam, lParam); break;
+	case WM_COMMAND: ret = WordCardHolderForm_OnCommand(hWnd, wParam, lParam); break;
+	case WM_CLOSE: ret = WordCardHolderForm_OnClose(hWnd, wParam, lParam); break;
+	default: ret = FALSE; break;
+	}
+	return ret;
+}
+
+BOOL WordCardHolderForm_OnInitDialog(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	WordCardHolder* wordCardHolder;
+	WordCardHolder* keepCardHolder;
 	Long count;
-	Long i;
+	Long keepCount;
+	WordCard* index;
+	//1. 윈도우가 생성될 때
+	//1.1. 단어첩을 생성하다.
+	wordCardHolder = (WordCardHolder*)malloc(sizeof(WordCardHolder));
+	Create(wordCardHolder);
+	SetWindowLong(hWnd, GWL_USERDATA, (LONG)wordCardHolder);
 
-	Create(&wordCardHolder);
+	//1.2 찜한 단어첩을 생성하다.
+	keepCardHolder = (WordCardHolder*)malloc(sizeof(WordCardHolder));
+	Create(keepCardHolder);
+	SetProp(hWnd, "PROP_KEEPCARDHOLDER", (HANDLE)keepCardHolder);
 
-	printf("<�ȱ�>\n");
-	index = PutIn(&wordCardHolder, wordCard1);
-	printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
+	//단어첩을 적재한다.
+	count = Load(wordCardHolder);
 
-	index = PutIn(&wordCardHolder, wordCard2);
-	printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
+	//찜한 단어첩을 적재한다
+	keepCount = KeepingCardLoad(keepCardHolder);
+	SetProp(hWnd, "PROP_KEEPCOUNT", (HANDLE)keepCount);
 
-	index = PutIn(&wordCardHolder, wordCard3);
-	printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
-
-	index = PutIn(&wordCardHolder, wordCard4);
-	printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
-
-	printf("<ù��° ���� ã��>\n");
-	index = First(&wordCardHolder);
-	printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
-
-	printf("<���� ���� ã��>\n");
-	index = Next(&wordCardHolder);
-	printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
-
-	printf("<���� ���� ã��>\n");
-	index = Previous(&wordCardHolder);
-	printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
-
-	printf("<������ ���� ã��>\n");
-	index = Last(&wordCardHolder);
-	printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
-
-	printf("<���� ������>\n");
-	wordCard = PutOut(&wordCardHolder, index);
-	printf("%s\t%s\t%s\t%s\n", wordCard.word.spelling, wordCard.word.wordClass, wordCard.word.meaning, wordCard.word.example);
-
-	printf("<���� �ٽ� �ȱ�>\n");
-	index = PutIn(&wordCardHolder, wordCard);
-	printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
-
-	printf("<ö��ã��>\n");
-	FindSpelling(&wordCardHolder, "pretty", &indexes, &count);
-	i = 0;
-	while (i < count) {
-		index = indexes[i];
-		printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
-		i++;
+	
+	//적재할때 첫번째 단어를 보이도록 한다.
+	if (count > 0) {
+		index = First(wordCardHolder);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)index->word.spelling);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)index->word.wordClass);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)index->word.meaning);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)index->word.example);
 	}
-	if (indexes != NULL) {
-		free(indexes);
-	}
-	printf("\n");
-
-	printf("<�ǹ�ã��>\n");
-	FindMeaning(&wordCardHolder, "�̻ڴ�", &indexes, &count);
-	i = 0;
-	while (i < count) {
-		index = indexes[i];
-		printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
-		i++;
-	}
-	if (indexes != NULL) {
-		free(indexes);
-	}
-	printf("\n");
-
-	printf("<�����ϱ�>\n");
-	Arrange(&wordCardHolder);
-	index = First(&wordCardHolder);
-	while (index != temp) {
-		printf("%s\t%s\t%s\t%s\n", index->word.spelling, index->word.wordClass, index->word.meaning, index->word.example);
-		temp = index;
-		index = Next(&wordCardHolder);
-	}
-
-	//�����
-	Destroy(&wordCardHolder);
-
-	return 0;
-}
-#endif
-
-void Create(WordCardHolder* wordCardHolder) {
-	wordCardHolder->first = NULL;
-	wordCardHolder->length = 0;
-	wordCardHolder->current = NULL;
+	return TRUE;
 }
 
-WordCard* PutIn(WordCardHolder* wordCardHolder, WordCard wordCard) {
-	WordCard* previous = NULL;
+BOOL WordCardHolderForm_OnCommand(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	BOOL ret;
 
-	wordCardHolder->current = wordCardHolder->first;
-	while (wordCardHolder->current != NULL) {
-		previous = wordCardHolder->current;
-		wordCardHolder->current = wordCardHolder->current->next;
+	switch (LOWORD(wParam)) {
+	case IDC_BUTTON_PUTIN: ret = WordCardHolderForm_OnPutInButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_BUTTON_FIND: ret = WordCardHolderForm_OnFindButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_BUTTON_PUTOUT: ret = WordCardHolderForm_OnPutOutButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_BUTTON_ARRANGE: ret = WordCardHolderForm_OnArrangeButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_BUTTON_FIRST: ret = WordCardHolderForm_OnFirstButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_BUTTON_PREVIOUS: ret = WordCardHolderForm_OnPreviousButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_BUTTON_NEXT: ret = WordCardHolderForm_OnNextButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_BUTTON_LAST: ret = WordCardHolderForm_OnLastButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_BUTTON_MEMORIZE: ret = WordCardHolderForm_OnMemorizeButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_BUTTON_KEEP: ret = WordCardHolderForm_OnKeepButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_BUTTON_TEST: ret = WordCardHolderForm_OnTestButtonClicked(hWnd, wParam, lParam); break;
+	default: ret = FALSE; break;
 	}
-	wordCardHolder->current = (WordCard*)malloc(sizeof(WordCard));
-	(*wordCardHolder->current) = wordCard;
-	if (previous != NULL) {
-		previous->next = wordCardHolder->current;
-	}
-	else {
-		wordCardHolder->first = wordCardHolder->current;
-	}
-	(wordCardHolder->length)++;
-
-	return wordCardHolder->current;
+	return ret;
 }
 
-WordCard PutOut(WordCardHolder* wordCardHolder, WordCard* index) {
-	WordCard* previous = NULL;
-	WordCard wordCard;
+BOOL WordCardHolderForm_OnClose(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	WordCardHolder* wordCardHolder;
+	WordCardHolder* keepCardHolder;
 
-	wordCardHolder->current = wordCardHolder->first;
-	while (wordCardHolder->current != index) {
-		previous = wordCardHolder->current;
-		wordCardHolder->current = wordCardHolder->current->next;
+	//10. 닫기 버튼을 클릭했을 때
+
+	//10.1. 단어첩을 지우다.
+	wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+	keepCardHolder = (Long)GetProp(hWnd, "PROP_KEEPCARDHOLDER");
+	
+	if (wordCardHolder != NULL) {
+		//단어첩과 찜한 단어첩을 저장한다.
+		Save(wordCardHolder);
+		KeepingCardSave(keepCardHolder);
+		Destroy(wordCardHolder);
+		Destroy(keepCardHolder);
+		free(wordCardHolder);
+		free(keepCardHolder);
 	}
-	if (previous != NULL) {
-		previous->next = index->next;
-	}
-	else {
-		wordCardHolder->first = index->next;
-	}
-	if (index->next != NULL) {
-		wordCardHolder->current = index->next;
-	}
-	else {
-		wordCardHolder->current = previous;
-	}
-	wordCard = *index;
-	wordCard.next = NULL;
-	if (index != NULL) {
-		free(index);
-	}
-	(wordCardHolder->length)--;
-	return wordCard;
+	RemoveProp(hWnd, "PROP_KEEPCARDHOLDER");
+	//10.2. 윈도우를 닫다.
+	EndDialog(hWnd, 0);
+	return TRUE;
 }
 
-void FindSpelling(WordCardHolder* wordCardHolder, char(*spelling), WordCard** (*indexes), Long* count) {
-	Long i = 0;
-	*count = 0;
+BOOL WordCardHolderForm_OnPutInButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	//2. 끼우기 버튼을 클릭했을 때
+	if (HIWORD(wParam) == BN_CLICKED) {
+		//2.1. 끼우기 윈도우를 출력한다.
+		DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_PUTTINGINFORM), NULL, PuttingInFormProc);
+	}
 
-	*indexes = (WordCard * (*))calloc(wordCardHolder->length, sizeof(WordCard*));
-	wordCardHolder->current = wordCardHolder->first;
+	return TRUE;
+}
 
-	while (wordCardHolder->current != NULL) {
-		if (strcmp(wordCardHolder->current->word.spelling, spelling) == 0) {
-			(*indexes)[i] = wordCardHolder->current;
-			i++;
-			(*count)++;
+BOOL WordCardHolderForm_OnFindButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	//3. 찾기 버튼을 클릭했을 때
+	if (HIWORD(wParam) == BN_CLICKED) {
+		//3.1. 찾기 윈도우를 출력한다.
+		DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_FINDINGFORM), NULL, FindingFormProc);
+	}
+	return TRUE;
+}
+
+BOOL WordCardHolderForm_OnPutOutButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	//4. 들어내기 버튼을 클릭했을 때
+	if (HIWORD(wParam) == BN_CLICKED) {
+		//4.1. 들어내기 윈도우를 출력한다.
+		DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_PUTTINGOUTFORM), NULL, PuttingOutFormProc);
+	}
+	return TRUE;
+}
+
+BOOL WordCardHolderForm_OnArrangeButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	WordCardHolder* wordCardHolder;
+	WordCard* wordCard;
+
+	//5. 정리하기 버튼을 클릭했을 때
+	if (HIWORD(wParam) == BN_CLICKED) {
+		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+		//5.1. 단어첩에서 정리하다.
+		Arrange(wordCardHolder);
+		//5.2. 단어첩에서 처음으로 이동한다.
+		wordCard = First(wordCardHolder);
+		//5.3. 단어을 출력한다.
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+	}
+	return TRUE;
+}
+
+BOOL WordCardHolderForm_OnFirstButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	WordCardHolder* wordCardHolder;
+	WordCard* wordCard;
+
+	//6. 처음 버튼을 클릭했을 때
+	if (HIWORD(wParam) == BN_CLICKED) {
+		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+		//6.1. 단어첩에서 처음으로 이동하다.
+		wordCard = First(wordCardHolder);
+		//6.2. 단어을 출력하다.
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+	}
+	return TRUE;
+}
+
+BOOL WordCardHolderForm_OnPreviousButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	WordCardHolder* wordCardHolder;
+	WordCard* wordCard;
+
+	if (HIWORD(wParam) == BN_CLICKED) {
+		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+		
+		wordCard = Previous(wordCardHolder);
+		
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+	}
+	return TRUE;
+}
+
+BOOL WordCardHolderForm_OnNextButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	WordCardHolder* wordCardHolder;
+	WordCard* wordCard;
+
+	if (HIWORD(wParam) == BN_CLICKED) {
+		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+
+		wordCard = Next(wordCardHolder);
+
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+	}
+	return TRUE;
+}
+
+BOOL WordCardHolderForm_OnLastButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	WordCardHolder* wordCardHolder;
+	WordCard* wordCard;
+
+	if (HIWORD(wParam) == BN_CLICKED) {
+		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+
+		wordCard = Last(wordCardHolder);
+
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
+		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+	}
+	return TRUE;
+}
+
+BOOL WordCardHolderForm_OnMemorizeButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	if (HIWORD(wParam) == BN_CLICKED) {
+		DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_MEMORIZINGFORM), NULL, MemorizingFormProc);
+	}
+	return TRUE;
+}
+
+BOOL WordCardHolderForm_OnKeepButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	WordCardHolder* keepCardHolder;
+
+	if (HIWORD(wParam) == BN_CLICKED) {
+		keepCardHolder = (Long)GetProp(hWnd, "PROP_KEEPCARDHOLDER");
+		//찜한 단어 카드가 없으면 없다는 메세지 박스 출력한다.
+		if (keepCardHolder->length == 0) {
+			MessageBox(hWnd, (LPCWSTR)"현재 찜한 단어가 없습니다", (LPCWSTR)"알림", MB_OK | MB_ICONEXCLAMATION);
 		}
-		wordCardHolder->current = wordCardHolder->current->next;
+		else { DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_KEEPINGFORM), NULL, KeepingFormProc); }
 	}
+	return TRUE;
 }
 
-void FindMeaning(WordCardHolder* wordCardHolder, char(*meaning), WordCard** (*indexes), Long* count) {
-	Long i = 0;
-	*count = 0;
-
-	*indexes = (WordCard * (*))calloc(wordCardHolder->length, sizeof(WordCard*));
-	wordCardHolder->current = wordCardHolder->first;
-
-	while (wordCardHolder->current != NULL) {
-		if (strcmp(wordCardHolder->current->word.meaning, meaning) == 0) {
-			(*indexes)[i] = wordCardHolder->current;
-			i++;
-			(*count)++;
-		}
-		wordCardHolder->current = wordCardHolder->current->next;
+BOOL WordCardHolderForm_OnTestButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	if (HIWORD(wParam) == BN_CLICKED) {
+		DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_TESTINGFORM), NULL, TestingFormProc);
 	}
-}
-
-WordCard* First(WordCardHolder* wordCardHolder) {
-	wordCardHolder->current = wordCardHolder->first;
-	return wordCardHolder->current;
-}
-
-WordCard* Next(WordCardHolder* wordCardHolder) {
-	WordCard* previous = wordCardHolder->current;
-	wordCardHolder->current = wordCardHolder->current->next;
-	if (wordCardHolder->current == NULL) {
-		wordCardHolder->current = previous;
-	}
-	return wordCardHolder->current;
-}
-
-WordCard* Previous(WordCardHolder* wordCardHolder) {
-	WordCard* previous = NULL;
-	WordCard* current = wordCardHolder->current;
-
-	wordCardHolder->current = wordCardHolder->first;
-	while (wordCardHolder->current != current) {
-		previous = wordCardHolder->current;
-		wordCardHolder->current = wordCardHolder->current->next;
-	}
-	if (previous != NULL) {
-		wordCardHolder->current = previous;
-	}
-	return wordCardHolder->current;
-}
-
-WordCard* Last(WordCardHolder* wordCardHolder) {
-	WordCard* previous = NULL;
-	while (wordCardHolder->current != NULL) {
-		previous = wordCardHolder->current;
-		wordCardHolder->current = wordCardHolder->current->next;
-	}
-	if (previous != NULL) {
-		wordCardHolder->current = previous;
-	}
-	return wordCardHolder->current;
-}
-
-WordCard* Move(WordCardHolder* wordCardHolder, WordCard* index) {
-	wordCardHolder->current = index;
-	return wordCardHolder->current;
-}
-
-void Arrange(WordCardHolder* wordCardHolder) {
-	WordCard* previous;
-	WordCard* temp;
-	WordCard* next;
-	Long i = 1;
-	Long j;
-	while (i < wordCardHolder->length) {
-		previous = NULL;
-		wordCardHolder->current = wordCardHolder->first;
-		next = wordCardHolder->current->next;
-		j = 1;
-		while (j <= wordCardHolder->length - i) {
-			if (strcmp(wordCardHolder->current->word.spelling, next->word.spelling) > 0) {
-				if (previous != NULL) {
-					temp = previous->next;
-					previous->next = wordCardHolder->current->next;
-				}
-				else {
-					temp = wordCardHolder->first;
-					wordCardHolder->first = wordCardHolder->current->next;
-				}
-				wordCardHolder->current->next = next->next;
-				next->next = temp;
-				previous = next;
-			}
-			else {
-				previous = wordCardHolder->current;
-				wordCardHolder->current = next;
-			}
-			next = wordCardHolder->current->next;
-			j++;
-		}
-		i++;
-	}
-}
-
-void Destroy(WordCardHolder* wordCardHolder) {
-	wordCardHolder->current = wordCardHolder->first;
-	while (wordCardHolder->current != NULL) {
-		wordCardHolder->first = wordCardHolder->current->next;
-		wordCardHolder->current = NULL;
-		wordCardHolder->current = wordCardHolder->first;
-	}
-}
-
-Long Load(WordCardHolder* wordCardHolder) {
-	FILE* file = fopen("Words.dat", "rb");
-	WordCard wordCard;
-	WordCard* previous = NULL;
-	Word word;
-	Long index;
-
-	if (file != NULL) {
-		fread(&word, sizeof(Word), 1, file);
-		while (!feof(file)) {
-			wordCard.word = word;
-			wordCard.next = NULL;
-			wordCardHolder->current = (WordCard*)malloc(sizeof(WordCard));
-			*(wordCardHolder->current) = wordCard;
-			if (previous != NULL) {
-				previous->next = wordCardHolder->current;
-			}
-			else {
-				wordCardHolder->first = wordCardHolder->current;
-			}
-			previous = wordCardHolder->current;
-			(wordCardHolder->length)++;
-			fread(&word, sizeof(Word), 1, file);
-		}
-		fclose(file);
-	}
-	return wordCardHolder->length;
-}
-
-Long KeepingCardLoad(WordCardHolder* wordCardHolder) {
-	FILE* file = fopen("KeepingWords.dat", "rb");
-	WordCard wordCard;
-	WordCard* previous = NULL;
-	Word word;
-	Long index;
-
-	if (file != NULL) {
-		fread(&word, sizeof(Word), 1, file);
-		while (!feof(file)) {
-			wordCard.word = word;
-			wordCard.next = NULL;
-			wordCardHolder->current = (WordCard*)malloc(sizeof(WordCard));
-			*(wordCardHolder->current) = wordCard;
-			if (previous != NULL) {
-				previous->next = wordCardHolder->current;
-			}
-			else {
-				wordCardHolder->first = wordCardHolder->current;
-			}
-			previous = wordCardHolder->current;
-			(wordCardHolder->length)++;
-			fread(&word, sizeof(Word), 1, file);
-		}
-		fclose(file);
-	}
-	return wordCardHolder->length;
-}
-
-Long Save(WordCardHolder* wordCardHolder) {
-	Word word;
-	Long count = 0;
-	Long i = 0;
-	FILE* file = fopen("Words.dat", "wb");
-	if (file != NULL) {
-		wordCardHolder->current = wordCardHolder->first;
-		//�ܾ�ø�� ���� �ƴѵ��� �ݺ��Ѵ�
-		while (wordCardHolder->current != NULL) {
-			fwrite(&wordCardHolder->current->word + i, sizeof(Word), 1, file);
-			count++;
-			wordCardHolder->current = wordCardHolder->current->next;
-		}
-		fclose(file);
-	}
-	return count;
-}
-
-Long KeepingCardSave(WordCardHolder* wordCardHolder) {
-	Word word;
-	Long count = 0;
-	Long i = 0;
-	FILE* file = fopen("KeepingWords.dat", "wb");
-	if (file != NULL) {
-		wordCardHolder->current = wordCardHolder->first;
-		//�ܾ�ø�� ���� �ƴѵ��� �ݺ��Ѵ�
-		while (wordCardHolder->current != NULL) {
-			fwrite(&wordCardHolder->current->word + i, sizeof(Word), 1, file);
-			count++;
-			wordCardHolder->current = wordCardHolder->current->next;
-		}
-		fclose(file);
-	}
-	return count;
+	return TRUE;
 }
