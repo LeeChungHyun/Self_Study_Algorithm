@@ -65,3 +65,28 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
   4.2. File Processing(Load/Save)기능 추가
   
 ```
+
+```
+5. WordCardHolder 프로젝트
+
+  5.1. LinkedList 기반 명함 관리 프로그램(MFC포함)
+    5.1.1 주요 기능
+      -꽂기(PutIn)
+      -들어내기(PutOut)
+        -->닫기 클릭시, 다시 끼우기에 대한 메세지 박스 나오도록 설계
+      -찾기(Find)
+      -정리하기(Arrange)
+      -외우기(Memorize)
+        --> 플래시 카드 식으로 외우기
+        --> 찜하기 기능 추가(찜한 단어로 자동이동)
+      -찜한 단어(Keep)
+        --> 찜한 단어가 없을 경우 알림 메세지 박스 출력
+        --> 찜한 단어가 있을 경우 되돌리기 기능으로 메인 윈도우로 이동
+      -테스트(Test)
+        --> 메인 윈도우에 대한 단어들로 테스트
+        --> 정답을 쓰고 제출하기 버튼 클릭한다 
+        --> 틀릴 시, 정답을 보여주고 다시 푼다
+      -First, Next, Previous, Last
+      
+   5.2. File Processing(Load/Save)기능과 찜한 단어만의 File Processing(KeepCardLoad/KeepCardSave)기능 추가
+```
