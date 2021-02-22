@@ -33,26 +33,26 @@ BOOL WordCardHolderForm_OnInitDialog(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 	Long count;
 	Long keepCount;
 	WordCard* index;
-	//1. À©µµ¿ì°¡ »ý¼ºµÉ ¶§
-	//1.1. ´Ü¾îÃ¸À» »ý¼ºÇÏ´Ù.
+	//1. ìœˆë„ìš°ê°€ ìƒì„±ë  ë•Œ
+	//1.1. ë‹¨ì–´ì²©ì„ ìƒì„±í•˜ë‹¤.
 	wordCardHolder = (WordCardHolder*)malloc(sizeof(WordCardHolder));
 	Create(wordCardHolder);
 	SetWindowLong(hWnd, GWL_USERDATA, (LONG)wordCardHolder);
 
-	//1.2 ÂòÇÑ ´Ü¾îÃ¸À» »ý¼ºÇÏ´Ù.
+	//1.2 ì°œí•œ ë‹¨ì–´ì²©ì„ ìƒì„±í•˜ë‹¤.
 	keepCardHolder = (WordCardHolder*)malloc(sizeof(WordCardHolder));
 	Create(keepCardHolder);
 	SetProp(hWnd, "PROP_KEEPCARDHOLDER", (HANDLE)keepCardHolder);
 
-	//´Ü¾îÃ¸À» ÀûÀçÇÑ´Ù.
+	//ë‹¨ì–´ì²©ì„ ì ìž¬í•œë‹¤.
 	count = Load(wordCardHolder);
 
-	//ÂòÇÑ ´Ü¾îÃ¸À» ÀûÀçÇÑ´Ù
+	//ì°œí•œ ë‹¨ì–´ì²©ì„ ì ìž¬í•œë‹¤
 	keepCount = KeepingCardLoad(keepCardHolder);
 	SetProp(hWnd, "PROP_KEEPCOUNT", (HANDLE)keepCount);
 
 	
-	//ÀûÀçÇÒ¶§ Ã¹¹øÂ° ´Ü¾î¸¦ º¸ÀÌµµ·Ï ÇÑ´Ù.
+	//ì ìž¬í• ë•Œ ì²«ë²ˆì§¸ ë‹¨ì–´ë¥¼ ë³´ì´ë„ë¡ í•œë‹¤.
 	if (count > 0) {
 		index = First(wordCardHolder);
 		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)index->word.spelling);
@@ -87,14 +87,14 @@ BOOL WordCardHolderForm_OnClose(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 	WordCardHolder* wordCardHolder;
 	WordCardHolder* keepCardHolder;
 
-	//10. ´Ý±â ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§
+	//10. ë‹«ê¸° ë²„íŠ¼ì„ í´ë¦­í–ˆì„ ë•Œ
 
-	//10.1. ´Ü¾îÃ¸À» Áö¿ì´Ù.
+	//10.1. ë‹¨ì–´ì²©ì„ ì§€ìš°ë‹¤.
 	wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
 	keepCardHolder = (Long)GetProp(hWnd, "PROP_KEEPCARDHOLDER");
 	
 	if (wordCardHolder != NULL) {
-		//´Ü¾îÃ¸°ú ÂòÇÑ ´Ü¾îÃ¸À» ÀúÀåÇÑ´Ù.
+		//ë‹¨ì–´ì²©ê³¼ ì°œí•œ ë‹¨ì–´ì²©ì„ ì €ìž¥í•œë‹¤.
 		Save(wordCardHolder);
 		KeepingCardSave(keepCardHolder);
 		Destroy(wordCardHolder);
@@ -103,16 +103,15 @@ BOOL WordCardHolderForm_OnClose(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 		free(keepCardHolder);
 	}
 	RemoveProp(hWnd, "PROP_KEEPCARDHOLDER");
-	//10.2. À©µµ¿ì¸¦ ´Ý´Ù.
+	//10.2. ìœˆë„ìš°ë¥¼ ë‹«ë‹¤.
 	EndDialog(hWnd, 0);
 	return TRUE;
 }
 
-
 BOOL WordCardHolderForm_OnPutInButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
-	//2. ³¢¿ì±â ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§
+	//2. ë¼ìš°ê¸° ë²„íŠ¼ì„ í´ë¦­í–ˆì„ ë•Œ
 	if (HIWORD(wParam) == BN_CLICKED) {
-		//2.1. ³¢¿ì±â À©µµ¿ì¸¦ Ãâ·ÂÇÑ´Ù.
+		//2.1. ë¼ìš°ê¸° ìœˆë„ìš°ë¥¼ ì¶œë ¥í•œë‹¤.
 		DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_PUTTINGINFORM), NULL, PuttingInFormProc);
 	}
 
@@ -120,19 +119,31 @@ BOOL WordCardHolderForm_OnPutInButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lP
 }
 
 BOOL WordCardHolderForm_OnFindButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
-	//3. Ã£±â ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§
+	WordCardHolder* wordCardHolder;
+	//3. ì°¾ê¸° ë²„íŠ¼ì„ í´ë¦­í–ˆì„ ë•Œ
 	if (HIWORD(wParam) == BN_CLICKED) {
-		//3.1. Ã£±â À©µµ¿ì¸¦ Ãâ·ÂÇÑ´Ù.
-		DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_FINDINGFORM), NULL, FindingFormProc);
+		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+		if (wordCardHolder->length == 0) {
+			MessageBox(hWnd, (LPCWSTR)"í˜„ìž¬ ì°¾ì„ ë‹¨ì–´ê°€ ì—†ìŠµë‹ˆë‹¤", (LPCWSTR)"ì•Œë¦¼", MB_OK | MB_ICONEXCLAMATION);
+		}
+		else{//3.1. ì°¾ê¸° ìœˆë„ìš°ë¥¼ ì¶œë ¥í•œë‹¤.
+			DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_FINDINGFORM), NULL, FindingFormProc);
+		}
 	}
 	return TRUE;
 }
 
 BOOL WordCardHolderForm_OnPutOutButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
-	//4. µé¾î³»±â ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§
+	WordCardHolder* wordCardHolder;
+
+	//4. ë“¤ì–´ë‚´ê¸° ë²„íŠ¼ì„ í´ë¦­í–ˆì„ ë•Œ
 	if (HIWORD(wParam) == BN_CLICKED) {
-		//4.1. µé¾î³»±â À©µµ¿ì¸¦ Ãâ·ÂÇÑ´Ù.
-		DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_PUTTINGOUTFORM), NULL, PuttingOutFormProc);
+		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+		if (wordCardHolder->length == 0) {
+			MessageBox(hWnd, (LPCWSTR)"í˜„ìž¬ ë“¤ì–´ë‚¼ ë‹¨ì–´ê°€ ì—†ìŠµë‹ˆë‹¤", (LPCWSTR)"ì•Œë¦¼", MB_OK | MB_ICONEXCLAMATION);
+		}
+		//4.1. ë“¤ì–´ë‚´ê¸° ìœˆë„ìš°ë¥¼ ì¶œë ¥í•œë‹¤.
+		else { DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_PUTTINGOUTFORM), NULL, PuttingOutFormProc); }
 	}
 	return TRUE;
 }
@@ -141,18 +152,23 @@ BOOL WordCardHolderForm_OnArrangeButtonClicked(HWND hWnd, WPARAM wParam, LPARAM 
 	WordCardHolder* wordCardHolder;
 	WordCard* wordCard;
 
-	//5. Á¤¸®ÇÏ±â ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§
+	//5. ì •ë¦¬í•˜ê¸° ë²„íŠ¼ì„ í´ë¦­í–ˆì„ ë•Œ
 	if (HIWORD(wParam) == BN_CLICKED) {
 		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
-		//5.1. ´Ü¾îÃ¸¿¡¼­ Á¤¸®ÇÏ´Ù.
-		Arrange(wordCardHolder);
-		//5.2. ´Ü¾îÃ¸¿¡¼­ Ã³À½À¸·Î ÀÌµ¿ÇÑ´Ù.
-		wordCard = First(wordCardHolder);
-		//5.3. ´Ü¾îÀ» Ãâ·ÂÇÑ´Ù.
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+		if (wordCardHolder->length == 0) {
+			MessageBox(hWnd, (LPCWSTR)"í˜„ìž¬ ì •ë¦¬í•  ë‹¨ì–´ê°€ ì—†ìŠµë‹ˆë‹¤", (LPCWSTR)"ì•Œë¦¼", MB_OK | MB_ICONEXCLAMATION);
+		}
+		else {
+			//5.1. ë‹¨ì–´ì²©ì—ì„œ ì •ë¦¬í•˜ë‹¤.
+			Arrange(wordCardHolder);
+			//5.2. ë‹¨ì–´ì²©ì—ì„œ ì²˜ìŒìœ¼ë¡œ ì´ë™í•œë‹¤.
+			wordCard = First(wordCardHolder);
+			//5.3. ë‹¨ì–´ì„ ì¶œë ¥í•œë‹¤.
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+		}
 	}
 	return TRUE;
 }
@@ -161,16 +177,21 @@ BOOL WordCardHolderForm_OnFirstButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lP
 	WordCardHolder* wordCardHolder;
 	WordCard* wordCard;
 
-	//6. Ã³À½ ¹öÆ°À» Å¬¸¯ÇßÀ» ¶§
+	//6. ì²˜ìŒ ë²„íŠ¼ì„ í´ë¦­í–ˆì„ ë•Œ
 	if (HIWORD(wParam) == BN_CLICKED) {
 		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
-		//6.1. ´Ü¾îÃ¸¿¡¼­ Ã³À½À¸·Î ÀÌµ¿ÇÏ´Ù.
-		wordCard = First(wordCardHolder);
-		//6.2. ´Ü¾îÀ» Ãâ·ÂÇÏ´Ù.
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+		if (wordCardHolder->length == 0) {
+			MessageBox(hWnd, (LPCWSTR)"í˜„ìž¬ ë‹¨ì–´ê°€ ì—†ìŠµë‹ˆë‹¤", (LPCWSTR)"ì•Œë¦¼", MB_OK | MB_ICONEXCLAMATION);
+		}
+		else {
+			//6.1. ë‹¨ì–´ì²©ì—ì„œ ì²˜ìŒìœ¼ë¡œ ì´ë™í•˜ë‹¤.
+			wordCard = First(wordCardHolder);
+			//6.2. ë‹¨ì–´ì„ ì¶œë ¥í•˜ë‹¤.
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+		}
 	}
 	return TRUE;
 }
@@ -181,13 +202,17 @@ BOOL WordCardHolderForm_OnPreviousButtonClicked(HWND hWnd, WPARAM wParam, LPARAM
 
 	if (HIWORD(wParam) == BN_CLICKED) {
 		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
-		
-		wordCard = Previous(wordCardHolder);
-		
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+		if (wordCardHolder->length == 0) {
+			MessageBox(hWnd, (LPCWSTR)"í˜„ìž¬ ë‹¨ì–´ê°€ ì—†ìŠµë‹ˆë‹¤", (LPCWSTR)"ì•Œë¦¼", MB_OK | MB_ICONEXCLAMATION);
+		}
+		else {
+			wordCard = Previous(wordCardHolder);
+
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+		}
 	}
 	return TRUE;
 }
@@ -198,13 +223,17 @@ BOOL WordCardHolderForm_OnNextButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lPa
 
 	if (HIWORD(wParam) == BN_CLICKED) {
 		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+		if (wordCardHolder->length == 0) {
+			MessageBox(hWnd, (LPCWSTR)"í˜„ìž¬ ë‹¨ì–´ê°€ ì—†ìŠµë‹ˆë‹¤", (LPCWSTR)"ì•Œë¦¼", MB_OK | MB_ICONEXCLAMATION);
+		}
+		else {
+			wordCard = Next(wordCardHolder);
 
-		wordCard = Next(wordCardHolder);
-
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+		}
 	}
 	return TRUE;
 }
@@ -215,27 +244,44 @@ BOOL WordCardHolderForm_OnLastButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lPa
 
 	if (HIWORD(wParam) == BN_CLICKED) {
 		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+		if (wordCardHolder->length == 0) {
+			MessageBox(hWnd, (LPCWSTR)"í˜„ìž¬ ë‹¨ì–´ê°€ ì—†ìŠµë‹ˆë‹¤", (LPCWSTR)"ì•Œë¦¼", MB_OK | MB_ICONEXCLAMATION);
+		}
+		else {
+			wordCard = Last(wordCardHolder);
 
-		wordCard = Last(wordCardHolder);
-
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
-		SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTSPELLING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.spelling);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTWORDCLASS), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.wordClass);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTMEANING), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.meaning);
+			SendMessage(GetDlgItem(hWnd, IDC_STATIC_INSERTEXAMPLE), WM_SETTEXT, (WPARAM)0, (LPARAM)wordCard->word.example);
+		}
 	}
 	return TRUE;
 }
 
 BOOL WordCardHolderForm_OnMemorizeButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	WordCardHolder* wordCardHolder;
+
 	if (HIWORD(wParam) == BN_CLICKED) {
-		DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_MEMORIZINGFORM), NULL, MemorizingFormProc);
+		wordCardHolder = (WordCardHolder*)GetWindowLong(hWnd, GWL_USERDATA);
+		if (wordCardHolder->length == 0) {
+			MessageBox(hWnd, (LPCWSTR)"í˜„ìž¬ ì™¸ìš¸ ë‹¨ì–´ê°€ ì—†ìŠµë‹ˆë‹¤", (LPCWSTR)"ì•Œë¦¼", MB_OK | MB_ICONEXCLAMATION);
+		}
+		else { DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_MEMORIZINGFORM), NULL, MemorizingFormProc); }
 	}
 	return TRUE;
 }
 
 BOOL WordCardHolderForm_OnKeepButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	WordCardHolder* keepCardHolder;
+
 	if (HIWORD(wParam) == BN_CLICKED) {
-		DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_KEEPINGFORM), NULL, KeepingFormProc);
+		keepCardHolder = (Long)GetProp(hWnd, "PROP_KEEPCARDHOLDER");
+		//ì°œí•œ ë‹¨ì–´ ì¹´ë“œê°€ ì—†ìœ¼ë©´ ì—†ë‹¤ëŠ” ë©”ì„¸ì§€ ë°•ìŠ¤ ì¶œë ¥í•œë‹¤.
+		if (keepCardHolder->length == 0) {
+			MessageBox(hWnd, (LPCWSTR)"í˜„ìž¬ ì°œí•œ ë‹¨ì–´ê°€ ì—†ìŠµë‹ˆë‹¤", (LPCWSTR)"ì•Œë¦¼", MB_OK | MB_ICONEXCLAMATION);
+		}
+		else { DialogBox((HINSTANCE)GetWindowLong(hWnd, GWL_HINSTANCE), MAKEINTRESOURCE(IDD_KEEPINGFORM), NULL, KeepingFormProc); }
 	}
 	return TRUE;
 }
