@@ -88,6 +88,9 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
         --> 틀릴 시, 정답을 보여주고 다시 푼다
       -First, Next, Previous, Last
       
+    5.1.2 추가 기능
+      -단어가 없을 시 없다는 메세지 출력
+      
    5.2. File Processing(Load/Save)기능과 찜한 단어만의 File Processing(KeepCardLoad/KeepCardSave)기능 추가
 ```
 
