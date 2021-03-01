@@ -15,69 +15,76 @@ int main(int argc, char* argv[]) {
 	Node* (*indexes);
 
 	
-	//1. ¿¬°á¸®½ºÆ® »ı¼º
+	//1. ì—°ê²°ë¦¬ìŠ¤íŠ¸ ìƒì„±
 	Create(&linkedList);
-	//2. ¸Ç µÚ ³ëµå Ãß°¡
+	
+	//2. ë§¨ ë’¤ ë…¸ë“œ ì¶”ê°€
 	object = 100;
 	index = AppendFromTail(&linkedList, &object, sizeof(Long));
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
-	//3. ¸Ç ¾Õ ³ëµå Ãß°¡
+	
+	//3. ë§¨ ì• ë…¸ë“œ ì¶”ê°€
 	object = 50;
 	index = AppendFromHead(&linkedList, &object, sizeof(Long));
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
-	//4. ³ëµå 150 »ğÀÔ
+	
+	//4. ë…¸ë“œ 150 ì‚½ì…
 	object = 150;
 	index = InsertAfter(&linkedList, index, &object, sizeof(Long));
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
-	//5. Ã³À½ ³ëµå
+	
+	//5. ì²˜ìŒ ë…¸ë“œ
 	index = First(&linkedList);
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
-	//6. ³ëµå 10 »ğÀÔ
+	
+	//6. ë…¸ë“œ 10 ì‚½ì…
 	object = 10;
 	index = InsertBefore(&linkedList, index, &object, sizeof(Long));
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
-	//7. ¸¶Áö¸· ³ëµå
+	
+	//7. ë§ˆì§€ë§‰ ë…¸ë“œ
 	index = Last(&linkedList);
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
-	//8. ÀÌÀü ³ëµå
+	
+	//8. ì´ì „ ë…¸ë“œ
 	index = Previous(&linkedList);
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
 
-	//9. ¸Ç³¡ Áö¿ì±â
+	//9. ë§¨ë ì§€ìš°ê¸°
 	index = DeleteFromTail(&linkedList);
 	if (index == NULL) { 
-		printf("¸Ç³¡ ³ëµå Áö¿ö ºÀ½\n");
+		printf("ë§¨ë ë…¸ë“œ ì§€ì›Œë´‰\n");
 	}
 	
-	//10. ³ëµå 50 Ã£±â
+	//10. ë…¸ë“œ 50 ì°¾ê¸°
 	key = 50;
 	index = LinearSearchUnique(&linkedList, &key, Compare);
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
 	
-	//11. ´ÙÀ½ ³ëµå
+	//11. ë‹¤ìŒ ë…¸ë“œ
 	index = Next(&linkedList);
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
 
-	//12. 150 »èÁ¦
+	//12. 150 ì‚­ì œ
 	index = Delete(&linkedList, index);
-	if (index == NULL) { printf("ÇöÀç ³ëµå Áö¿ö ºÀ½\n"); }
+	if (index == NULL) { printf("í˜„ì¬ ë…¸ë“œ ì§€ì›Œë´‰\n"); }
 
-	//13. ¸Ç  50 Ãß°¡
+	//13. ë§¨  50 ì¶”ê°€
 	object = 50;
 	index = AppendFromTail(&linkedList, &object, sizeof(Long));
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
 
-	//14. ³ëµå 50 Ã£±â(º¹¼ö)
+	//14. ë…¸ë“œ 50 ì°¾ê¸°(ë³µìˆ˜)
 	key = 50;
 	LinearSearchDuplicate(&linkedList, &key, &indexes, &count, Compare);
 	i = 0;
@@ -89,25 +96,25 @@ int main(int argc, char* argv[]) {
 	}
 	printf("\n");
 
-	//15. ³ëµå 10À¸·Î ÀÌµ¿ÇÑ´Ù.
+	//15. ë…¸ë“œ 10ìœ¼ë¡œ ì´ë™í•œë‹¤.
 	index = indexes[0];
 	index = Move(&linkedList, index);
 	GetAt(&linkedList, index, &ret, sizeof(Long));
 	printf("%d\n", ret);
 
-	//16. ¸Ç ¾Õ ³ëµå »èÁ¦
+	//16. ë§¨ ì• ë…¸ë“œ ì‚­ì œ
 	index = DeleteFromHead(&linkedList);
 	if (index == NULL) {
-		printf("¸Ç ¾Õ ³ëµå »èÁ¦\n");
+		printf("ë§¨ ì• ë…¸ë“œ ì‚­ì œ\n");
 	}
 
-	//17.ÀüÃ¼ ³ëµå Áö¿î´Ù.
+	//17.ì „ì²´ ë…¸ë“œ ì§€ìš´ë‹¤.
 	DeleteAllItems(&linkedList);
 	if (linkedList.length == 0) {
-		printf("ÀüÃ¼ ³ëµå »èÁ¦\n");
+		printf("ì „ì²´ ë…¸ë“œ ì‚­ì œ\n");
 	}
 
-	//18. ¿¬°á¸®½ºÆ®¸¦ Áö¿î´Ù.
+	//18. ì—°ê²°ë¦¬ìŠ¤íŠ¸ë¥¼ ì§€ìš´ë‹¤.
 	Destroy(&linkedList);
 	return 0;
 }
