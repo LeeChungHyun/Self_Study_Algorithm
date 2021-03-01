@@ -117,7 +117,7 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
     -LINEARSEARCH_UNIQUE(단수 노드 탐색)
     -LINEARSEARCH_DUPLICATE(복수 노드 탐색)
     
-    6.3.2 ITERATION
+    6.3.2. ITERATION
     -FIRST
     -NEXT
     -PREVIOUS
