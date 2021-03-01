@@ -90,3 +90,36 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
       
    5.2. File Processing(Load/Save)기능과 찜한 단어만의 File Processing(KeepCardLoad/KeepCardSave)기능 추가
 ```
+
+```
+6. LinkedList Library 설계 프로젝트
+
+  6.1. CREATE(연결리스트 생성)
+
+  6.2. UPDATE
+    6.2.1. INSERT
+    -INSERT_BEFORE(특정 노드 앞에 삽입)
+    -INSERT_AFTER(특정 노드 뒤에 삽입)
+    -APPEND_FROM_HEAD(맨 앞 노드 삽입)
+    -APPEND_FROM_TAIL(맨 뒤 노드 삽입)
+    
+    6.2.2. DELETE
+    -DELETE(특정 노드 삭제)
+    -DELETE_FROM_HEAD(맨 앞 노드 삭제)
+    -DELETE_FROM_TAIL(맨 뒤 노드 삭제)
+    -DELETE_ALL_ITEMS(전체 노드 삭제)
+    
+  6.3. QUERY
+    6.3.1.SEARCH
+    -LINEARSEARCH_UNIQUE(단수 노드 탐색)
+    -LINEARSEARCH_DUPLICATE(복수 노드 탐색)
+    
+    6.3.2 ITERATION
+    -FIRST
+    -NEXT
+    -PREVIOUS
+    -LAST
+    -MOVE(특정 노드 이동)
+    
+  6.4. DESTROY
+```
