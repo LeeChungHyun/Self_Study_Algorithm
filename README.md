@@ -64,6 +64,8 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
         
   4.2. File Processing(Load/Save)기능 추가
   
+  4.3. LinkedList 라이브러리를 활용한 명함 관리 프로그램(ApplyLinkedList)
+  
 ```
 
 ```
