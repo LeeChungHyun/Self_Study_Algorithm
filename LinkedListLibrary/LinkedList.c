@@ -82,7 +82,7 @@ Node* AppendFromTail(LinkedList* linkedList, void* object, size_t size) {
 }
 
 Node* Delete(LinkedList* linkedList, Node* index) {
-	if (linkedList->head != index && linkedList->tail) {
+	if (linkedList->head != index && linkedList->tail != index) {
 		index->previous->next = index->next;
 		index->next->previous = index->previous;
 		linkedList->current = index->next;
