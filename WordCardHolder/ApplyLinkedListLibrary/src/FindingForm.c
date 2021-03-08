@@ -23,6 +23,8 @@ BOOL FindingForm_OnCommand(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 	case IDC_BUTTON_NEXT2: ret = FindingForm_OnNextButtonClicked(hWnd, wParam, lParam); break;
 	case IDC_BUTTON_PREVIOUS2: ret = FindingForm_OnPreviousButtonClicked(hWnd, wParam, lParam); break;
 	case IDC_BUTTON_LAST2: ret = FindingForm_OnLastButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_RADIO_SPELLING: ret = FindingForm_OnSpellingRadioButtonClicked(hWnd, wParam, lParam); break;
+	case IDC_RADIO_MEANING: ret = FindingForm_OnMeaningRadioButtonClicked(hWnd, wParam, lParam); break;
 	default: ret = FALSE; break;
 	}
 	return ret;
@@ -46,6 +48,26 @@ BOOL FindingForm_OnClose(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 	return TRUE;
 }
 
+BOOL FindingForm_OnSpellingRadioButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	int spellingChecked = SendMessage(GetDlgItem(hWnd, IDC_RADIO_SPELLING), BM_GETCHECK, (WPARAM)0, (LPARAM)0);
+	int meaningChecked = SendMessage(GetDlgItem(hWnd, IDC_RADIO_MEANING), BM_GETCHECK, (WPARAM)0, (LPARAM)0);
+	if (meaningChecked == BST_UNCHECKED && spellingChecked == BST_CHECKED) {
+		SendMessage(GetDlgItem(hWnd, IDC_EDIT_MEANING), EM_SETSEL, (WPARAM)0, (LPARAM)-1);
+		SendMessage(GetDlgItem(hWnd, IDC_EDIT_MEANING), WM_CLEAR, (WPARAM)0, (LPARAM)0);
+	}
+	return TRUE;
+}
+
+BOOL FindingForm_OnMeaningRadioButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
+	int spellingChecked = SendMessage(GetDlgItem(hWnd, IDC_RADIO_SPELLING), BM_GETCHECK, (WPARAM)0, (LPARAM)0);
+	int meaningChecked = SendMessage(GetDlgItem(hWnd, IDC_RADIO_MEANING), BM_GETCHECK, (WPARAM)0, (LPARAM)0);
+	if (meaningChecked == BST_CHECKED && spellingChecked == BST_UNCHECKED) {
+		SendMessage(GetDlgItem(hWnd, IDC_EDIT_SPELLING), EM_SETSEL, (WPARAM)0, (LPARAM)-1);
+		SendMessage(GetDlgItem(hWnd, IDC_EDIT_SPELLING), WM_CLEAR, (WPARAM)0, (LPARAM)0);
+	}
+	return TRUE;
+}
+
 BOOL FindingForm_OnFindButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 	HWND wordCardHolderForm;
 	WordCard* wordCard;
@@ -64,7 +86,7 @@ BOOL FindingForm_OnFindButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) {
 		int spellingChecked = SendMessage(GetDlgItem(hWnd, IDC_RADIO_SPELLING), BM_GETCHECK, (WPARAM)0, (LPARAM)0);
 		int meaningChecked = SendMessage(GetDlgItem(hWnd, IDC_RADIO_MEANING), BM_GETCHECK, (WPARAM)0, (LPARAM)0);
 
-		wordCardHolderForm = FindWindow("#32770", "�ܾ�ø");
+		wordCardHolderForm = FindWindow("#32770", "단어첩");
 		wordCardHolder = (WordCardHolder*)GetWindowLong(wordCardHolderForm, GWL_USERDATA);
 
 		indexes = (WordCardHolder * (*))GetWindowLong(hWnd, GWL_USERDATA);
@@ -113,7 +135,7 @@ BOOL FindingForm_OnSelectButtonClicked(HWND hWnd, WPARAM wParam, LPARAM lParam) 
 		current = (Long)GetProp(hWnd, "PROP_CURRENT");
 		wordCard = indexes[current];
 
-		wordCardHolderForm = FindWindow("#32770", "�ܾ�ø");
+		wordCardHolderForm = FindWindow("#32770", "단어첩");
 		wordCardHolder = (WordCardHolder*)GetWindowLong(wordCardHolderForm, GWL_USERDATA);
 		wordCard = WordCardHolder_Move(wordCardHolder, wordCard);
 
