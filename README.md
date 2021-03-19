@@ -96,6 +96,10 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
       -단어가 없을 시 없다는 메세지 출력
       
    5.2. File Processing(Load/Save)기능과 찜한 단어만의 File Processing(KeepCardLoad/KeepCardSave)기능 추가
+
+   5.3. LinkedList 라이브러리를 활용한 명함 관리 프로그램(ApplyLinkedList)
+    5.3.1. 정리하기(Arrange)를 제외한 기능들은 기존과 동일
+    
 ```
 
 ```
