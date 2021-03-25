@@ -134,3 +134,23 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
     
   6.4. DESTROY
 ```
+
+```
+7. BinarySearchTree Library 설계 프로젝트
+  7.1. Recursive Function(재귀)
+    -CREATE
+    -INSERT
+    -SEARCH
+    -DELETE
+    -MAKEBALANCE
+      -MAKEKEYS
+        -NODE_MAKEKEYS
+      -DELETEALLITEMS
+        -NODE_DELETEALLITEMS
+      -MAKETREE
+        -NODE_MAKETREE
+    -DESTROY
+      -NODE_DESTROY
+      
+  7.2. Stack Function
+```
