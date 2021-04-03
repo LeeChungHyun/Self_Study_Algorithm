@@ -14,8 +14,8 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
   01.08 = MFC를 이용한 GUI프로그램(MSDN활용)
           특징: 닫기 클릭시 자동으로 bin파일 저장 + 찾기 클릭시 찾기에 대한 해당 윈도우 생성(FindingForm)
   01.23 = Array 라이브러리를 이용한 Heap 기반 동적할당 설계 및 테스트
-  [깃헙](https://github.com/)
 ```
+[AddressBook_GUI](https://github.com/LeeChungHyun/Self_Study_Algorithm/blob/main/addressBook/GUI/AddressBook_0106.exe/)
 
 ```
 2. 단어장 toy project 프로젝트
@@ -27,6 +27,7 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
   2.5. MFC를 이용한 GUI프로그램(MSDN활용)
        특징: 닫기 클릭시 자동으로 bin파일 저장 + 찾기 클릭시 찾기에 대한 해당 윈도우 생성(FindingForm)
 ```
+[WordBook_GUI](https://github.com/LeeChungHyun/Self_Study_Algorithm/blob/main/wordBook/GUI/WordBook.exe/)
 
 ```
 3. Array Library 설계 프로젝트
@@ -69,6 +70,7 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
     4.3.1. 정리하기(Arrange)를 제외한 기능들은 기존과 동일
   
 ```
+[BusinessCardHolder_GUI](https://github.com/LeeChungHyun/Self_Study_Algorithm/blob/main/BusinessCardHolder/ApplyLinkedList/Debug/ApplyLinkedList.exe)
 
 ```
 5. WordCardHolder 프로젝트
@@ -102,6 +104,8 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
     5.3.1. 정리하기(Arrange)를 제외한 기능들은 기존과 동일
     
 ```
+[WordCardHolder_GUI](https://github.com/LeeChungHyun/Self_Study_Algorithm/blob/main/WordCardHolder/Debug/WordCardHolder.exe/)
+
 
 ```
 6. LinkedList Library 설계 프로젝트
