@@ -14,7 +14,7 @@ Focus --> 어떻게 하면 논.리.적이고 효.율.적으로 짜볼까?!
   01.08 = MFC를 이용한 GUI프로그램(MSDN활용)
           특징: 닫기 클릭시 자동으로 bin파일 저장 + 찾기 클릭시 찾기에 대한 해당 윈도우 생성(FindingForm)
   01.23 = Array 라이브러리를 이용한 Heap 기반 동적할당 설계 및 테스트
-  [AddressBook_GUI](https://github.com/LeeChungHyun/Self_Study_Algorithm/blob/main/addressBook/GUI/AddressBook_0106.exe)
+  [주소록 GUI](https://github.com/LeeChungHyun/Self_Study_Algorithm/tree/main/addressBook/GUI/)
 ```
 
 ```
